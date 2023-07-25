@@ -1,4 +1,3 @@
-
 let productos = [
     {
     id: 1,
@@ -11,7 +10,7 @@ let productos = [
     id: 2,
     nombreProducto: "Tradicional",
     precio: 3100,
-    estaEnPromo: false
+    estaEnPromo: true
     },
 
     {
@@ -19,43 +18,44 @@ let productos = [
     nombreProducto: "Veggie",
     precio: 2500,
     estaEnPromo: false
-    },
+    }
 ];
 
 let carrito = [];
+let producto
+let porcentajePromo = 20
 
 function buscarProducto() {
     let seleccion = prompt("Ingrese el nombre de la picada que desea seleccionar: (Premium, Tradicional, Veggie)");
-    
-
     producto = productos.find((p) => p.nombreProducto.toLowerCase() === seleccion.toLowerCase());
-    }
+}
 
 function agregarCarrito() {
-    }
 
-if (productos) {
+    if (producto) {
     let cantidad = parseInt(prompt("Ingrese la cantidad que desea seleccionar:"));
     let quierePromo
-}
 
-if (productos.estaEnPromo) {
-    quierePromo = confirm("Este producto está en promo! Desea agregar una unidad más al 50%?")
-}
-
-let subtotal
+    if (producto.estaEnPromo) {
+        quierePromo = confirm(`Este producto está en promo! Desea agregar una unidad más al ${porcentajePromo}%?`)
+    }
+    let subtotal
     if (quierePromo) {
-        subtotal = ((productos.precio * cantidad) - 1) + productos.precio * 50/100 
+    subtotal = (producto.precio * cantidad ) + producto.precio * (1-porcentajePromo/100)
+    cantidad++ 
     } else {
-        subtotal = productos.precio * cantidad 
+        subtotal = producto.precio * cantidad 
     }
 
     carrito.push({
-    producto: productos.nombreProducto,
+    producto: producto.nombreProducto,
     cantidad: cantidad,
     subtotal: subtotal
-});
-
+    });
+} else {
+    alert("El producto que ingresaste no existe")
+}
+}
 
 function confirmarCarrito() {
     while (true) {
@@ -91,4 +91,3 @@ vaciarCarrito();
 }
 
 calcularTotal();
-
