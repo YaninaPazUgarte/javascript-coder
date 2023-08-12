@@ -1,229 +1,194 @@
 let productos = [
     {
-    id: 0,
-    nombreProducto: "Premium",
-    precio: 3900,
-    estaEnPromo: false
+        id: 0,
+        nombre: "Tradicional",
+        precio: 4000,
+        estaEnPromo: false,
+        imagen: "img/picada_tradicional.jpg"
     },
-
     {
-    id: 1,
-    nombreProducto: "Tradicional",
-    precio: 3100,
-    estaEnPromo: true
+        id: 1,
+        nombre: "Miniburgers",
+        precio: 3900,
+        estaEnPromo: true,
+        imagen: "img/picada_burger.jpg"
     },
-
     {
-    id: 2,
-    nombreProducto: "Veggie",
-    precio: 2500,
-    estaEnPromo: false
+        id: 2,
+        nombre: "Veggie",
+        precio: 3000,
+        estaEnPromo: false,
+        imagen: "img/picada_veggie.jpg"
+    },
+    {
+        id: 3,
+        nombre: "Bagel",
+        precio: 3900,
+        estaEnPromo: false,
+        imagen: "img/picada_bagel.jpg"
+    },
+    {
+        id: 4,
+        nombre: "Completa",
+        precio: 5100,
+        estaEnPromo: true,
+        imagen: "img/picada_completa.jpg"
+    },
+    {
+        id: 5,
+        nombre: "Gourmet",
+        precio: 5500,
+        estaEnPromo: false,
+        imagen: "img/picada_gourmet.jpg"
     }
 ];
 
-let producto = []
+var productCards = document.getElementById("product-cards");
 
-if (localStorage.getItem("producto")) {
-    producto = JSON.parse(localStorage.getItem("producto"))
-}else{
-    producto.push('id:0, id:1, id:2')
-    localStorage.setItem("producto", JSON.stringify(producto))
-}
+// Mostramos todos los productos
+mostrarLista(productos)
 
-let carrito = [];
-let porcentajePromo = 20
-
-let productosEnCarrito = []
+let carrito = []
 
 if (localStorage.getItem("carrito")) {
-    console.log('hay carrito');
-    productosEnCarrito = JSON.parse(localStorage.getItem("carrito"))
-} else {
-    console.log('NO hay carrito');
-    localStorage.setItem("carrito", JSON.stringify(productosEnCarrito))
+    carrito = JSON.parse(localStorage.getItem("carrito"))
+}else{
+    localStorage.setItem("carrito", JSON.stringify(carrito))
 }
 
-function buscarProducto(buscado, array) {
-    let busqueda = array.filter(
-        (producto) => nombreProducto.toLowerCase().includes(buscado.toLowerCase())
-            
-    )
-    
-    if (busqueda.length == 0) {
-        coincidencia.innerHTML = ""
-        let nuevoDiv = document.createElement("div")
-        nuevoDiv.innerHTML = `<p> No hay coincidencias</p>`
-        coincidencia.appendChild(nuevoDiv)
+let inputBusqueda = document.getElementById("busqueda")
+let botonDeBusqueda = document.getElementById("botonDeBusqueda")
+let modalBody = document.getElementById("modal-body")
+let btnGuardarPicada = document.getElementById("guardarPicadaBtn")
+let coincidencia = document.getElementById("coincidencia")
+let inicio = document.getElementById("inicio")
+let verCarrito = document.getElementById("verCarrito")
+let modalCarrito = document.getElementById("modalCarrito")
+let botonCerrarCarrito = document.getElementById("cerrarCarrito")
+let botonVaciarCarrito = document.getElementById("vaciarCarrito")
+let botonFinalizarCompra = document.getElementById("finalizarCompra")
+// El carrito comienza oculto
+modalCarrito.hidden = true
+let buscado
 
+// Escondemos el carrito y mostramos todos los productos
+botonCerrarCarrito.addEventListener("click", () => {
+    modalCarrito.hidden = true
+    mostrarLista(productos)
+})
+
+// Mostramos carrito y ocultamos los productos
+verCarrito.addEventListener("click", () => {
+    cargarProductosCarrito()
+    modalCarrito.hidden = false
+    mostrarLista([])
+})
+
+// Vaciamos carrito, borramos el storage, mostramos mensaje de carrito vacio
+botonVaciarCarrito.addEventListener("click", () => {
+    carrito = []
+    localStorage.setItem("carrito", JSON.stringify([]))
+    modalBody.innerHTML = `<p> No tenés productos en el carrito </p>`
+})
+
+// Por ahora cerramos el carrito y mostramos todos los productos
+botonFinalizarCompra.addEventListener("click", () => {
+    modalCarrito.hidden = true
+    mostrarLista(productos)
+})
+
+// Mostramos todo y cerramos carrito al apretar inicio
+inicio.addEventListener("click", () => {
+    productCards.innerHTML = ""
+    modalCarrito.hidden = true
+    mostrarLista(productos)
+})
+
+inputBusqueda.addEventListener("input", () => {
+    console.log (busqueda.value)
+    buscado = busqueda.value
+})
+
+botonDeBusqueda.addEventListener("click", () => {
+    buscarInfo(buscado)
+})
+
+function buscarInfo(buscado) {
+    //Filtro en el arreglo de productos los que incluyen lo buscado en su nombre
+    let busqueda = productos.filter(
+        (picada) => picada.nombre.toLowerCase().includes(buscado.toLowerCase()) 
+    )
+
+    if (busqueda.length == 0) {
+        coincidencia.innerHTML = "";
+        let nuevoDiv = document.createElement("div");
+        nuevoDiv.innerHTML = `<p> No hay coincidencias</p>`;
+        coincidencia.appendChild(nuevoDiv);
+        mostrarLista(productos);
     } else {
-        coincidencia.innerHTML = ""
-        mostrarCatalogo(busqueda)
+        coincidencia.innerHTML = "";
+        mostrarLista(busqueda);
     }
 }
 
-/* 2do paso, traer el elemento al js */
-let divProductos = document.getElementById("productos")
-let btnGuardar = document.getElementById("guardarBtn")
-let buscador = document.getElementById("buscador")
-let btnVerCatalogo = document.getElementById("verCatalogo")
-let btnOcultarCatalogo = document.getElementById("ocultarCatalogo")
-let modalBody = document.getElementById("modal-body") 
-let botonCarrito = document.getElementById("botonCarrito")
-let coincidencia = document.getElementById("coincidencia")
-let selectOrden = document.getElementById("selectOrden")
+function mostrarLista(array) {
+    productCards.innerHTML = "";
 
-
-function mostrarCatalogo(array) {
-    divProductos.innerHTML = ""
-        for (const producto of array) {
-            let nuevoProducto = document.createElement("div")
-            nuevoProducto.innerHTML = 
-            `<div 
-            <button id="agregarBtn${producto.id}" class="btn btn-outline-success">Agregar al carrito</button>
+    for (const picada of array) {
+        let nuevaPicada = document.createElement("div");
+        nuevaPicada.classList.add("col-12", "col-md-6", "col-lg-4", "my-4");
+        nuevaPicada.innerHTML = `
+        <div id="${picada.id}" class="card" style="width: 18rem;">
+            <img class="card-img-top img-fluid" style="height: 200px;" src="${picada.imagen}" alt="${picada.nombreProducto}">
+            <div class="card-body">
+                <h4 class="card-title">${picada.nombre}</h4>
+                <p class="">Precio: ${picada.precio}</p>
+                <button id="agregarBtn${picada.id}" class="btn btn-outline-success">Agregar al carrito</button>
             </div>
-        </div>`
-        divProductos.appendChild(nuevoProducto)
-
-        let btnAgregar = document.getElementById(`agregarBtn${producto.id}`)
+        </div>`;
+        
+        productCards.appendChild(nuevaPicada);
+        let btnAgregar = document.getElementById(`agregarBtn${picada.id}`);
 
         btnAgregar.addEventListener("click", () => {
-            agregarAlCarrito(producto)
-        })
-
-}
-}
-
-function agregarAlCarrito(producto) {
-    productosEnCarrito.push(producto)
-    localStorage.setItem("carrito", JSON.stringify(productosEnCarrito))
+            agregarAlCarrito(picada);
+        });
+    }
 }
 
-function cargarProductosCarrito(array) {
-    modalBody.innerHTML = ""
+function agregarAlCarrito(picada) {
+    carrito.push(picada);
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+}
 
-    array.forEach(productoCarrito => {
-        modalBody.innerHTML += 
-        `<div class="card border-primary mb-3" id ="productoCarrito${productoCarrito.id}" style="max-width: 540px;">
-            <img class="card-img-top" height="300px" src="assets/${productoCarrito.imagen}" alt="${productoCarrito.nombreProducto}">
+function cargarProductosCarrito() {
+    modalBody.innerHTML = "";
+
+    if (carrito.length == 0) {
+        modalBody.innerHTML = `<p> No tenés productos en el carrito </p>`
+    }
+
+    carrito.forEach(productoCarrito => {
+        console.log("Producto en el carro")
+        modalBody.innerHTML += `
+        <div class="card border-primary mb-3" id="productoCarrito${productoCarrito.id}" style="max-width: 540px;">
+            <img class="card-img-top" height="300px" src="${productoCarrito.imagen}" alt="${productoCarrito.nombreProducto}">
             <div class="card-body">
-                <h4 class="card-title">${productoCarrito.nombreProducto}</h4>
-        
+                <h4 class="card-title">${productoCarrito.nombre}</h4>
                 <p class="card-text">$${productoCarrito.precio}</p> 
-                <button class= "btn btn-danger" id="botonEliminar${productoCarrito.id}"><i class="fas fa-trash-alt"></i></button>
+                <button class="btn btn-danger" id="botonEliminar${productoCarrito.id}">
+                    Eliminar del carrito
+                </button>
             </div>    
-        </div>
-        `
+        </div>`;
     });
 
-    array.forEach((productoCarrito, indice) => {
+    carrito.forEach((productoCarrito, indice) => {
         document.getElementById(`botonEliminar${productoCarrito.id}`).addEventListener("click", () => {
-            let cardProducto = document.getElementById(`productoCarrito${productoCarrito.id}`)
-            cardProducto.remove()
-            productosEnCarrito.splice(indice, 1)
-            localStorage.setItem("carrito", JSON.stringify(productosEnCarrito))
-
-
-        })
-
+            let cardProducto = document.getElementById(`productoCarrito${productoCarrito.id}`);
+            cardProducto.remove();
+            carrito.splice(indice, 1);
+            localStorage.setItem("carrito", JSON.stringify(carrito));
+        });
     });
-
 }
-
-function cargarLibro(array) {
-    let inputAutor = document.getElementById("autorInput")
-    let inputTitulo = document.getElementById("tituloInput")
-    let inputPrecio = document.getElementById("precioInput")
-
-    let libroCreado = new Libro(array.length + 1, inputAutor.value, inputTitulo.value, parseInt(inputPrecio.value), "libroNuevo.jpg")
-    array.push(libroCreado)
-    localStorage.setItem("estanteria", JSON.stringify(array))
-    mostrarCatalogo(array)
-    inputAutor.value = ""
-    inputTitulo.value = ""
-    inputPrecio.value = ""
-}
-
-btnGuardarProducto.addEventListener("click", () => {
-    cargarProducto(producto)
-})
-/* 3er agregar capacidad de escucha al elemento y agregar el evento */
-buscador.addEventListener("input", () => {
-    buscarInfo(buscador.value, productos)
-    
-    // Para picadas
-    // buscarProducto(buscador.value, productos)
-})
-
-botonCarrito.addEventListener("click", () => {
-    cargarProductosCarrito(productosEnCarrito)
-})
-
-
-mostrarCatalogo(productos)
-
-/* function buscarProducto() {
-    let seleccion = prompt("Ingrese el nombre de la picada que desea seleccionar: (Premium, Tradicional, Veggie)");
-    producto = productos.find((p) => p.nombreProducto.toLowerCase() === seleccion.toLowerCase());
-}
-
-function agregarCarrito() {
-
-    if (producto) {
-    let cantidad = parseInt(prompt("Ingrese la cantidad que desea seleccionar:"));
-    let quierePromo
-
-    if (producto.estaEnPromo) {
-        quierePromo = confirm(`Este producto está en promo! Desea agregar una unidad más al ${porcentajePromo}%?`)
-    }
-    let subtotal
-    if (quierePromo) {
-    subtotal = (producto.precio * cantidad ) + producto.precio * (1-porcentajePromo/100)
-    cantidad++ 
-    } else {
-        subtotal = producto.precio * cantidad 
-    }
-
-    carrito.push({
-    producto: producto.nombreProducto,
-    cantidad: cantidad,
-    subtotal: subtotal
-    });
-} else {
-    alert("El producto que ingresaste no existe")
-}
-}
-
-function confirmarCarrito() {
-    while (true) {
-    buscarProducto();
-    agregarCarrito();
-
-    if (!confirm("¿Desea agregar otro producto al carrito?")) {
-        break;
-    }
-    }
-}
-function calcularTotal() {
-    console.log("Carrito de compras:");
-    carrito.forEach((item) => {
-    console.log(`- ${item.cantidad} ${item.producto}: ${item.subtotal} ${item.estaEnPromo ? "Aprovechaste la promo!" : ""} `);
-});
-
-let total = carrito.reduce((sum, item) => sum + item.subtotal, 0);
-console.log(`Total a pagar: ${total}`);
-}
-
-function vaciarCarrito() {
-carrito = [];
-console.log("El carrito ha sido vaciado.");
-}
-
-confirmarCarrito();
-
-if (carrito.length > 0) {
-if (confirm("¿Desea vaciar el carrito?")) {
-vaciarCarrito();
-}
-}
-
-calcularTotal(); */

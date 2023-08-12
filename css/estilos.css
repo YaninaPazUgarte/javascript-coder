@@ -1,0 +1,25 @@
+.card {
+    border-color: #023f0b;
+    height: 100%; /* Establece una altura fija para las tarjetas */
+    padding: 10px;
+    margin: 10px;
+    width: 400px;
+}
+
+.card-img-top {
+    height: 200px; /* Establece una altura fija para las imágenes */
+    object-fit: cover; /* Ajusta la imagen dentro del contenedor manteniendo su relación de aspecto */
+}
+
+.card-title {
+    color: #343a40;
+}
+
+.card-text {
+    color: #343a40;
+}
+
+.btn {
+    background-color: #947006;
+    color: #343a40;
+}
