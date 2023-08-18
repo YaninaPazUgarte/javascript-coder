@@ -1,14 +1,21 @@
+.logo {
+    width: 100px;
+    border-radius: 50px;
+    margin: 5px; }
+
+/* INDEX */
 .card {
     border-color: #023f0b;
-    height: 100%; /* Establece una altura fija para las tarjetas */
+    height: 100%; 
     padding: 10px;
     margin: 10px;
     width: 400px;
+    box-shadow: 2px 2px 4px rgb(0, 0, 0, 0.4);
 }
 
 .card-img-top {
-    height: 200px; /* Establece una altura fija para las imágenes */
-    object-fit: cover; /* Ajusta la imagen dentro del contenedor manteniendo su relación de aspecto */
+    height: 200px; 
+    object-fit: cover; 
 }
 
 .card-title {
@@ -23,3 +30,28 @@
     background-color: #947006;
     color: #343a40;
 }
+
+/* CONTACTO */
+.buttons {
+    display: flex;
+    justify-content: center; }
+
+.btn {
+    background-color: #049b48;
+    border-color: #025025;
+    margin: 10px;
+    text-align: center; }
+
+.btn:hover {
+    background-color: #4e4d4c; }
+
+.form-control {
+    border: 2.5px solid #636566;
+    background-color: #d4ab74; }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif; }
+
