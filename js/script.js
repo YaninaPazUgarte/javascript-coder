@@ -1,52 +1,19 @@
-let productos = [
-    {
-        id: 0,
-        nombre: "Tradicional",
-        precio: 4000,
-        estaEnPromo: false,
-        imagen: "img/picada_tradicional.jpg"
-    },
-    {
-        id: 1,
-        nombre: "Miniburgers",
-        precio: 3900,
-        estaEnPromo: true,
-        imagen: "img/picada_burger.jpg"
-    },
-    {
-        id: 2,
-        nombre: "Veggie",
-        precio: 3000,
-        estaEnPromo: false,
-        imagen: "img/picada_veggie.jpg"
-    },
-    {
-        id: 3,
-        nombre: "Bagel",
-        precio: 3900,
-        estaEnPromo: false,
-        imagen: "img/picada_bagel.jpg"
-    },
-    {
-        id: 4,
-        nombre: "Completa",
-        precio: 5100,
-        estaEnPromo: true,
-        imagen: "img/picada_completa.jpg"
-    },
-    {
-        id: 5,
-        nombre: "Gourmet",
-        precio: 5500,
-        estaEnPromo: false,
-        imagen: "img/picada_gourmet.jpg"
-    }
-];
+let productos
+
+function cargarProductos() {
+    fetch("https://64dfca7f71c3335b25830f7e.mockapi.io/Productos")
+    .then((res) => res.json())
+    .then((data) => {
+        productos = data
+        mostrarLista(productos)
+    })
+}
+
+cargarProductos()
 
 var productCards = document.getElementById("product-cards");
 
 // Mostramos todos los productos
-mostrarLista(productos)
 
 let carrito = []
 
